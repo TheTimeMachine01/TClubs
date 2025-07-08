@@ -1,0 +1,1 @@
+# Script to run services locally (e.g., using Maven)
