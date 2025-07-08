@@ -1,0 +1,117 @@
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+.project
+.classpath
+.settings/
+.vscode/
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/MavenWrapperDownloader.java
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.log
+*.bak
+*.swp
+*.swo
+*.tmp
+hs_err_pid*.log
+.metadata
+.DS_Store
+Thumbs.db
+
+# Spring Boot
+!**/src/main/**/resources/application*.yml
+!**/src/main/**/resources/application*.properties
+!**/src/main/**/resources/bootstrap*.yml
+!**/src/main/**/resources/bootstrap*.properties
+!**/src/main/**/resources/logback-spring.xml
+# Exclude compiled classes and JARs
+**/target/
+*.jar
+*.war
+*.ear
+
+# Docker
+!**/Dockerfile*
+!**/.dockerignore
+*.env
+.env.*
+docker-compose.override.yml
+docker-compose.yml
+# Exclude Docker volumes/data if mounted locally
+data/
+
+# Kubernetes
+# Kubeconfig files (often sensitive)
+*.kubeconfig
+# Kustomize build outputs
+kustomization.yaml.bak
+kustomize-build/
+
+# Terraform
+.terraform/
+*.tfplan
+*.tfstate
+*.tfstate.backup
+crash.log
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+# Terraform Cloud/Enterprise credentials
+.terraformrc
+terraform.rc
+
+# Logs
+logs/
+*.log
+*.txt
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# Testcontainers (if temporary files are generated outside target/)
+.testcontainers.properties
+
+# Kafka (if any local Kafka data directories are created)
+kafka-data/
+zookeeper-data/
+
+# Redis (if any local Redis data directories are created)
+redis-data/
+
+# MySQL/PostgreSQL/MongoDB (if any local database data directories are created)
+mysql-data/
+postgres-data/
+mongodb-data/
+
+# Flyway (if any specific Flyway generated files outside target/)
+# Generally, Flyway scripts are committed, but if there are temp files:
+flyway-temp/
+
+# Prometheus/Grafana (if any local data directories are created)
+prometheus-data/
+grafana-data/
+
+# Any other sensitive files not meant for version control
+secrets.env
+*.key
+*.pem
