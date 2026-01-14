@@ -1,41 +1,51 @@
 server:
-  port: 8081 # Or any other unique port for this service, e.g., 8082 for user-service, 8083 for event-service
+  port: ${SERVER_PORT:8081} # Or any other unique port for this service, e.g., 8082 for user-service, 8083 for event-service
 
 spring:
   application:
     name: auth-service # This name will be used in Eureka registry and for Feign clients
   profiles:
-    active: dev
+    active: ${SPRING_PROFILES_ACTIVE:dev}
   main:
     allow-bean-definition-overriding: true
-    debug: true
+    debug: ${SPRING_MAIN_DEBUG:false}
   data:
     redis:
-      host: 127.0.0.1
-      port: 6379
+      host: ${REDIS_HOST:redis-service} #127.0.0.1
+      port: ${REDIS_PORT:6379} #6379
 
 user-service:
-  url: http://127.0.0.1:8082
+  url: ${USER_SERVICE_URL:http://user-service:8082} #http://127.0.0.1:8082
 
 eureka:
   instance:
-    hostname: localhost
+    hostname: ${EUREKA_INSTANCE_HOSTNAME:localhost}
     prefer-ip-address: true # Register with IP address instead of hostname (often better for Docker)
     instance-id: ${spring.application.name}:${spring.application.instance_id:${server.port}}
   client:
     enabled: true
     service-url:
-      defaultZone: http://localhost:8761/eureka/ # Point to your Eureka server
+      defaultZone: ${EUREKA_SERVER_URL:http://eureka-server:8761/eureka/} # Point to your Eureka server
     fetch-registry: true
     register-with-eureka: true
 
 application:
   security:
     jwt:
-      secret-key: 2cc32af46eabfdcfe80781997abfbf407a42a07b470e429cb7c243f45a78f980
-      expiration: 3600000
+      secret-key: ${JWT_SECRET}
+      expiration: ${JWT_EXPIRATION_TIME}
       refresh-token:
-        expiration: 604800000
+        expiration: ${JWT_REFRESH_EXPIRATION_TIME}
+
+# Expose actuator health for readiness/liveness probes
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
 
 # Add this at the end of your auth-service's application.yml
 logging:

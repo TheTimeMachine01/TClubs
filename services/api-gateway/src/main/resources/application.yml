@@ -74,7 +74,7 @@ eureka:
   client:
     enabled: true
     service-url:
-      defaultZone: http://localhost:8761/eureka/ # Point to your Eureka server
+      defaultZone: http://eureka-server:8761/eureka/ # Point to your Eureka server
     fetch-registry: true
     register-with-eureka: true
 
@@ -91,10 +91,10 @@ management: # Actuator endpoints for monitoring
 application:
   security:
     jwt:
-      secret-key: 2cc32af46eabfdcfe80781997abfbf407a42a07b470e429cb7c243f45a78f980
-      expiration: 3600000
+      secret-key: ${JWT_SECRET}
+      expiration: ${JWT_EXPIRATION_TIME}
       refresh-token:
-        expiration: 604800000
+        expiration: ${JWT_REFRESH_EXPIRATION_TIME}
 
 # Add this to your API Gateway's application.yml
 logging:

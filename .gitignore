@@ -88,6 +88,9 @@ logs/
 .DS_Store
 Thumbs.db
 
+# Phase folder (internal planning documents)
+phase/
+
 # Testcontainers (if temporary files are generated outside target/)
 .testcontainers.properties
 

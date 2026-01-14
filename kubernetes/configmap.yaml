@@ -1,0 +1,8 @@
+# k8s/configmap.yaml (Add other non-sensitive config keys here; services can mount or read via envFrom)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tclubs-config
+data:
+  LOG_LEVEL_ROOT: INFO
+  # Add other non-sensitive config keys here; services can mount or read via envFrom
