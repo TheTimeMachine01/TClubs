@@ -1,0 +1,45 @@
+server:
+  port: 8082 # Unique port for user-service
+
+spring:
+  application:
+    name: user-service # This name will be used in Eureka registry
+  profiles:
+    active: dev
+  main:
+    allow-bean-definition-overriding: true
+  r2dbc:
+    url: r2dbc:postgresql://127.0.0.1:5432/clubs_db
+    username: postgres_user
+    password: postgres_password
+  data:
+    r2dbc:
+      repositories:
+        enabled: true
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+
+
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true # Crucial for proper registration
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${server.port}}
+  client:
+    enabled: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/ # Point to your Eureka server
+    fetch-registry: true
+    register-with-eureka: true
+
+application:
+  security:
+    jwt:
+      secret-key: 2cc32af46eabfdcfe80781997abfbf407a42a07b470e429cb7c243f45a78f980
+
+
+#logging:
+#  level:
+#    org.springframework.r2dbc: DEBUG

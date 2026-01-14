@@ -1,0 +1,18 @@
+# docker-compose.yml in your project root directory
+version: '3.8'
+
+services:
+  postgres_db:
+    image: postgres:15-alpine # Using a lightweight PostgreSQL image (you can choose other versions)
+    environment:
+      POSTGRES_DB: clubs_db
+      POSTGRES_USER: postgres_user
+      POSTGRES_PASSWORD: postgres_password
+    ports:
+      - "5432:5432" # Optional: Expose PostgreSQL port to your host machine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Persistent volume for data
+
+
+volumes:
+  postgres_data: # Define the named volume for persistence

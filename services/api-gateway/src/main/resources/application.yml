@@ -1,0 +1,107 @@
+server:
+  port: 8080 # Standard port for API Gateway, often runs on default HTTP port
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true # Enable discovery locator to automatically create routes for Eureka services
+              lower-case-service-id: true # Match lowercase service IDs (e.g., auth-service instead of AUTH-SERVICE)
+          routes:
+            # Auth Service Route
+            - id: auth-service
+              uri: lb://AUTH-SERVICE # 'lb://' indicates load-balanced route via Eureka
+              predicates:
+                - Path=/api/v1/auth/** # Route all requests starting with /api/v1/auth to auth-service
+              filters:
+                - RewritePath=/api/v1/(?<segment>.*), /${segment} # Rewrites path to remove /api/v1
+                - name: RequestRateLimiter # Apply Rate Limiting
+                  args:
+                    redis-rate-limiter.replenishRate: 10 # Tokens added per second
+                    redis-rate-limiter.burstCapacity: 20 # Max tokens in bucket (burst allowance)
+                    redis-rate-limiter.requestedTokens: 1 # Tokens consumed per request
+                    key-resolver: '#{@ipAddressKeyResolver}' # Define this bean below for IP-based rate limiting
+                - name: CircuitBreaker # Apply Circuit Breaker
+                  args:
+                    name: authServiceCircuitBreaker
+                    fallbackUri: forward:/api/v1/fallback/auth # Fallback URL if circuit opens
+
+            # User Service Route (Example)
+            - id: user-service
+              uri: lb://USER-SERVICE
+              predicates:
+                - Path=/api/v1/users/**
+                - Path=/api/v1/profiles/**
+                - Path=/api/v1/roles/**
+              filters:
+                - RewritePath=/api/v1/(?<segment>.*), /${segment}
+                - name: CircuitBreaker
+                  args:
+                    name: userServiceCircuitBreaker
+                    fallbackUri: forward:/api/v1/fallback/user
+                - JwtAuthGatewayFilter
+
+
+            # Dummy Service Route (for testing)
+            - id: dummy-service
+              uri: lb://DUMMY-SERVICE
+              predicates:
+                - Path=/api/v1/dummy/**
+              filters:
+                - RewritePath=/api/v1/dummy/(?<segment>.*), /${segment} # Rewrites /api/v1/dummy/hello to /hello
+                - name: CircuitBreaker
+                  args:
+                    name: dummyServiceCircuitBreaker
+                    fallbackUri: forward:/api/v1/fallback/dummy
+                - JwtAuthGatewayFilter
+
+  data:
+    redis: # For Redis-based Rate Limiting
+      host: 127.0.0.1
+      port: 6379
+
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${server.port}}
+  client:
+    enabled: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/ # Point to your Eureka server
+    fetch-registry: true
+    register-with-eureka: true
+
+
+management: # Actuator endpoints for monitoring
+  endpoints:
+    web:
+      exposure:
+        include: "*" # Expose all actuator endpoints (for development/monitoring)
+  health:
+    show-details: always # Show full health details
+
+# JWT Configuration (for JwtUtil in common-security)
+application:
+  security:
+    jwt:
+      secret-key: 2cc32af46eabfdcfe80781997abfbf407a42a07b470e429cb7c243f45a78f980
+      expiration: 3600000
+      refresh-token:
+        expiration: 604800000
+
+# Add this to your API Gateway's application.yml
+logging:
+  level:
+    com.netflix.discovery: DEBUG
+    org.springframework.cloud.netflix.eureka: DEBUG
+    org.springframework.cloud.gateway: DEBUG # <-- Add this
+    reactor.netty.http.client: DEBUG # <-- Add this
+    org.springframework.web.reactive.function.client: DEBUG # <-- Add this
+    org.springframework.http.server.reactive: DEBUG #
