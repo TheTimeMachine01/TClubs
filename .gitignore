@@ -91,6 +91,9 @@ Thumbs.db
 # Phase folder (internal planning documents)
 phase/
 
+# Errors and crash reports
+ErrorProne/
+
 # Testcontainers (if temporary files are generated outside target/)
 .testcontainers.properties
 

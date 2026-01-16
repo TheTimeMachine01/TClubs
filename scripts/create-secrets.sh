@@ -19,9 +19,11 @@ kubectl create secret generic tclubs-secrets \
 
 # Update postgres-secret with password from .env
 POSTGRES_PASSWORD="$(grep '^POSTGRES_PASSWORD=' "$ENV_FILE" | cut -d'=' -f2-)"
-kubectl patch secret postgres-secret \
-  --type='merge' \
-  -p "{\"stringData\":{\"POSTGRES_PASSWORD\":\"$POSTGRES_PASSWORD\"}}" \
+
+kubectl create secret generic postgres-secret \
+  --from-literal=POSTGRES_USER=tclubs \
+  --from-literal=POSTGRES_DB=tclubsdb \
+  --from-literal=POSTGRES_PASSWORD="$POSTGRES_PASSWORD" \
   --dry-run=client -o yaml | kubectl apply -f -
 
 echo "Secrets created/updated successfully."

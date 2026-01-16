@@ -1,23 +1,18 @@
 #!/usr/bin/env bash
-# Script to stop Kubernetes deployments and services
+# Script to delete Kubernetes deployments and services
 set -euo pipefail
 
-# List of services to manage
-SERVICES=(eureka-server api-gateway auth-service user-service dummy-service)
+# Define paths relative to the project root
+SERVICES_DIR="./kubernetes/services"
+INFRA_DIR="./kubernetes/infrastructure"
 
 usage() {
-    echo "Usage: $0 [all|service-name]"
+    echo "Usage: $0 [all|services|infra]"
     echo "Examples:"
-    echo "  $0 all          # Stop all services"
-    echo "  $0 api-gateway  # Stop only api-gateway"
-    echo "  $0              # Show this help"
+    echo "  $0 all       # Delete everything (Services + Infra)"
+    echo "  $0 services  # Delete only microservices"
+    echo "  $0 infra     # Delete only database, redis, eureka"
     exit 1
-}
-
-stop_service() {
-    local service="$1"
-    echo "Stopping $service..."
-    kubectl scale deployment "$service" --replicas=0 || echo "Failed to scale $service"
 }
 
 if [ $# -eq 0 ]; then
@@ -26,19 +21,23 @@ fi
 
 case "$1" in
     all)
-        echo "Stopping all services..."
-        for svc in "${SERVICES[@]}"; do
-            stop_service "$svc"
-        done
+        echo "Deleting all resources..."
+        kubectl delete -f "$SERVICES_DIR" --ignore-not-found
+        kubectl delete -f "$INFRA_DIR" --ignore-not-found
+        # Optional: Uncomment below if you want to wipe the DB data too
+        # kubectl delete pvc postgres-pvc --ignore-not-found
+        ;;
+    services)
+        echo "Deleting microservices..."
+        kubectl delete -f "$SERVICES_DIR" --ignore-not-found
+        ;;
+    infra)
+        echo "Deleting infrastructure..."
+        kubectl delete -f "$INFRA_DIR" --ignore-not-found
         ;;
     *)
-        if [[ " ${SERVICES[*]} " =~ " $1 " ]]; then
-            stop_service "$1"
-        else
-            echo "Error: Service '$1' not found. Available services: ${SERVICES[*]}"
-            exit 1
-        fi
+        usage
         ;;
 esac
 
-echo "Done. Services stopped. Use 'kubectl scale deployment <name> --replicas=1' to restart."
+echo "Done. Resources removed."

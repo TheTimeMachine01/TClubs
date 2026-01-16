@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/fallback") // Matches the fallbackUri in application.yml
 public class FallbackController {
 
-    @GetMapping("/auth")
+    @RequestMapping("/auth")
     public ResponseEntity<String> authServiceFallback() {
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
                 .body("Auth Service is currently unavailable. Please try again later.");
     }
 
-    @GetMapping("/user")
+    @RequestMapping("/user")
     public ResponseEntity<String> userServiceFallback() {
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
                 .body("User Service is currently unavailable. Please try again later.");

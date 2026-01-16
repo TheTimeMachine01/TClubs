@@ -27,10 +27,10 @@ spring:
                     redis-rate-limiter.burstCapacity: 20 # Max tokens in bucket (burst allowance)
                     redis-rate-limiter.requestedTokens: 1 # Tokens consumed per request
                     key-resolver: '#{@ipAddressKeyResolver}' # Define this bean below for IP-based rate limiting
-                - name: CircuitBreaker # Apply Circuit Breaker
-                  args:
-                    name: authServiceCircuitBreaker
-                    fallbackUri: forward:/api/v1/fallback/auth # Fallback URL if circuit opens
+#                - name: CircuitBreaker # Apply Circuit Breaker
+#                  args:
+#                    name: authServiceCircuitBreaker
+#                    fallbackUri: forward:/api/v1/fallback/auth # Fallback URL if circuit opens
 
             # User Service Route (Example)
             - id: user-service
@@ -63,7 +63,7 @@ spring:
 
   data:
     redis: # For Redis-based Rate Limiting
-      host: 127.0.0.1
+      host: ${REDIS_HOST:redis-service}
       port: 6379
 
 eureka:
