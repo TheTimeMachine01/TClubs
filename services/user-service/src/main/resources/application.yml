@@ -52,11 +52,20 @@ spring:
     url: r2dbc:postgresql://${DB_HOST:postgres-service}:${DB_PORT:5432}/${DB_NAME:tclubsdb}
     username: ${DB_USER:tclubs}
     password: ${DB_PASSWORD:tclubs-pass}
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
 
 eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${server.port}}
+    prefer-ip-address: true
   client:
     serviceUrl:
       defaultZone: ${EUREKA_SERVER_URL:http://eureka-server:8761/eureka/}
+      register-with-eureka: true
+      fetch-registry: true
 
 application:
   security:

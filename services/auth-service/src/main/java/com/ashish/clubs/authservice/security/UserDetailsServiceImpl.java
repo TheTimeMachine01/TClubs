@@ -24,8 +24,8 @@ public class UserDetailsServiceImpl implements ReactiveUserDetailsService {
     @Autowired
     private DiscoveryClient discoveryClient; // For service discovery (Eureka)
 
-    @Value("${user-service.url}")
-    private String userServiceUrl;
+//    @Value("${user-service.url}")
+//    private String userServiceUrl;
 
     public UserDetailsServiceImpl(WebClient.Builder webClientBuilder) {
         this.webClientBuilder = webClientBuilder;
@@ -34,7 +34,7 @@ public class UserDetailsServiceImpl implements ReactiveUserDetailsService {
     @PostConstruct
     public void init() {
         // This is where 'webClient' is supposed to be initialized
-        this.webClient = webClientBuilder.baseUrl(userServiceUrl).build();
+        this.webClient = webClientBuilder.baseUrl("http://user-service").build();
     }
 
     @Override

@@ -14,6 +14,7 @@ import com.ashish.clubs.common.models.user.Role;
 import com.ashish.clubs.common.models.user.User;
 import com.ashish.clubs.common.security.jwt.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -52,6 +53,7 @@ public class AuthController {
     private WebClient.Builder webClientBuilder;
 
     @Autowired
+    @Qualifier("userServiceWebClient")
     private WebClient userServiceWebClient;
 
     @Autowired

@@ -15,7 +15,7 @@ spring:
       port: ${REDIS_PORT:6379} #6379
 
 user-service:
-  url: ${USER_SERVICE_URL:http://user-service:8080} #http://127.0.0.1:8082
+  url: ${USER_SERVICE_URL:http://user-service} #http://127.0.0.1:8082
 
 eureka:
   instance:

@@ -30,10 +30,8 @@ public class SecurityConfig {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable) // Disable CSRF for stateless REST APIs
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers(HttpMethod.POST,"/users").permitAll() // Protect /users endpoints
-                        .pathMatchers("/actuator/**").permitAll()
                         .pathMatchers(HttpMethod.GET, "/users/username/**").permitAll() // <--- ADD THIS LINE
-                        // You might need to adjust this to allow unauthenticated access to H2 console
-                        // For H2 console, you might add: .pathMatchers("/h2-console/**").permitAll()
+                        .pathMatchers("/actuator/**").permitAll()
                         .anyExchange().authenticated() // All other requests require authentication
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2

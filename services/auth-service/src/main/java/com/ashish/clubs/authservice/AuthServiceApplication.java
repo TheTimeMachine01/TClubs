@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
         HibernateJpaAutoConfiguration.class
 })
 @EnableDiscoveryClient // This annotation enables the service to register with Eureka
-@ComponentScan(basePackages = {"com.ashish.clubs.authservice", "com.ashish.clubs.common.security"}) // Add this line
+@ComponentScan(basePackages = {"com.ashish.clubs.authservice", "com.ashish.clubs.common.security", "com.ashish.clubs.common.config"}) // Add this line
 public class AuthServiceApplication {
 
     public static void main(String[] args) {

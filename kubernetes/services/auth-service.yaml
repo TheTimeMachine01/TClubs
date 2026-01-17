@@ -17,6 +17,8 @@ spec:
         - name: auth-service
           image: tclubs/auth-service:latest
           env:
+            - name: USER_SERVICE_URL
+              value: "http://user-service:8080" # Explicitly use the stable K8s service name
             - name: REDIS_HOST
               value: redis-service
             - name: EUREKA_SERVER_URL
