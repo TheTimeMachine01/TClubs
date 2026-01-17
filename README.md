@@ -1,4 +1,4 @@
-.env# The Clubs
+# The Clubs
 
 A microservices-based application built with Spring Boot, featuring user authentication, management, and API gateway with Eureka service discovery. Deployed on Kubernetes for scalable, containerized environments.
 
