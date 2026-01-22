@@ -1,0 +1,65 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feed-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: feed-service
+  template:
+    metadata:
+      labels:
+        app: feed-service
+    spec:
+      containers:
+        - name: feed-service
+          image: tclubs/feed-service:latest
+          env:
+            - name: MONGO_HOST
+              value: mongodb
+            - name: MONGO_PORT
+              value: "27017"
+            - name: MONGO_DB
+              value: tclubsdb
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: tclubs-secrets
+                  key: MONGO_USER
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: tclubs-secrets
+                  key: MONGO_PASSWORD
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: kafka:29092
+            - name: EUREKA_SERVER_URL
+              value: http://eureka-server:8761/eureka/
+            - name: SPRING_PROFILES_ACTIVE
+              value: k8s
+          envFrom:
+            - secretRef:
+                name: tclubs-secrets
+          ports:
+            - containerPort: 8084
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8084
+            initialDelaySeconds: 30
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: feed-service
+spec:
+  ports:
+    - port: 8084
+      targetPort: 8084
+  selector:
+    app: feed-service
+  type: ClusterIP
+

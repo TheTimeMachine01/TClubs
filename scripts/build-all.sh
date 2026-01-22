@@ -2,7 +2,7 @@
 # Script to build all services by first packaging with Maven on the host, then building lightweight runtime images.
 set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-SERVICES=(eureka-server api-gateway auth-service user-service dummy-service)
+SERVICES=(eureka-server api-gateway auth-service user-service club-service feed-service media-service dummy-service)
 
 # Determine image repository name.
 # Priority: env IMAGE_REPO -> git remote repo name (lowercased) -> default 'tclubs'

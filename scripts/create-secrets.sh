@@ -15,6 +15,16 @@ kubectl create secret generic tclubs-secrets \
   --from-literal=JWT_SECRET="$(grep '^JWT_SECRET=' "$ENV_FILE" | cut -d'=' -f2-)" \
   --from-literal=JWT_EXPIRATION_TIME="$(grep '^JWT_EXPIRATION_TIME=' "$ENV_FILE" | cut -d'=' -f2-)" \
   --from-literal=JWT_REFRESH_EXPIRATION_TIME="$(grep '^JWT_REFRESH_EXPIRATION_TIME=' "$ENV_FILE" | cut -d'=' -f2-)" \
+  --from-literal=KAFKA_BOOTSTRAP_SERVERS="$(grep '^KAFKA_BOOTSTRAP_SERVERS=' "$ENV_FILE" | cut -d'=' -f2-)" \
+  --from-literal=MINIO_URL="$(grep '^MINIO_URL=' "$ENV_FILE" | cut -d'=' -f2-)" \
+  --from-literal=MINIO_ACCESS_KEY="$(grep '^MINIO_ACCESS_KEY=' "$ENV_FILE" | cut -d'=' -f2-)" \
+  --from-literal=MINIO_SECRET_KEY="$(grep '^MINIO_SECRET_KEY=' "$ENV_FILE" | cut -d'=' -f2-)" \
+  --from-literal=MINIO_BUCKET_NAME="$(grep '^MINIO_BUCKET_NAME=' "$ENV_FILE" | cut -d'=' -f2-)" \
+  --from-literal=MONGO_USER="$(grep '^MONGO_USER=' "$ENV_FILE" | cut -d'=' -f2-)" \
+  --from-literal=MONGO_PASSWORD="$(grep '^MONGO_PASSWORD=' "$ENV_FILE" | cut -d'=' -f2-)" \
+  --from-literal=MONGO_HOST="$(grep '^MONGO_HOST=' "$ENV_FILE" | cut -d'=' -f2-)" \
+  --from-literal=MONGO_PORT="$(grep '^MONGO_PORT=' "$ENV_FILE" | cut -d'=' -f2-)" \
+  --from-literal=MONGO_DB="$(grep '^MONGO_DB=' "$ENV_FILE" | cut -d'=' -f2-)" \
   --dry-run=client -o yaml | kubectl apply -f -
 
 # Update postgres-secret with password from .env

@@ -27,8 +27,12 @@ public class MediaFile implements Serializable {
     private String fileType; // e.g., "image/jpeg", "video/mp4"
     private long fileSize; // in bytes
     private String url; // Accessible URL for the file
-    private String uploadedByUserId;
+    private String uploaderId;
     private Instant uploadTimestamp;
     private String associatedEntityType; // e.g., "POST", "USER_PROFILE", "CLUB"
     private String associatedEntityId; // ID of the entity it's associated with
+    private String fileName;
+    private String mimeType;
+    private Instant createdAt;
+    private Instant updatedAt;
 }

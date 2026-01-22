@@ -18,6 +18,7 @@
         <module>common-config</module>
         <module>common-models</module>
         <module>common-security</module>
+        <module>common-messaging</module>
     </modules>
 
 </project>

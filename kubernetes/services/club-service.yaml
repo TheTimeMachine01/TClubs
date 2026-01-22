@@ -1,0 +1,68 @@
+---
+  type: ClusterIP
+    app: club-service
+  selector:
+      targetPort: 8083
+    - port: 8083
+  ports:
+spec:
+  name: club-service
+metadata:
+kind: Service
+apiVersion: v1
+---
+            periodSeconds: 10
+            initialDelaySeconds: 30
+              port: 8083
+              path: /actuator/health
+            httpGet:
+          readinessProbe:
+            - containerPort: 8083
+          ports:
+                name: tclubs-secrets
+            - secretRef:
+          envFrom:
+              value: k8s
+            - name: SPRING_PROFILES_ACTIVE
+              value: http://eureka-server:8761/eureka/
+            - name: EUREKA_SERVER_URL
+              value: kafka:29092
+            - name: KAFKA_BOOTSTRAP_SERVERS
+                  key: POSTGRES_PASSWORD
+                  name: postgres-secret
+                secretKeyRef:
+              valueFrom:
+            - name: DB_PASSWORD
+                  key: POSTGRES_USER
+                  name: postgres-secret
+                secretKeyRef:
+              valueFrom:
+            - name: DB_USER
+                  key: POSTGRES_DB
+                  name: postgres-secret
+                secretKeyRef:
+              valueFrom:
+            - name: DB_NAME
+              value: "5432"
+            - name: DB_PORT
+              value: postgres-service
+            - name: DB_HOST
+          env:
+          image: tclubs/club-service:latest
+        - name: club-service
+      containers:
+    spec:
+        app: club-service
+      labels:
+    metadata:
+  template:
+      app: club-service
+    matchLabels:
+  selector:
+  replicas: 1
+spec:
+  name: club-service
+metadata:
+kind: Deployment
+apiVersion: apps/v1
+

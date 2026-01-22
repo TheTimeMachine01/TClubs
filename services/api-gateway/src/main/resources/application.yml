@@ -47,6 +47,46 @@ spring:
                     fallbackUri: forward:/api/v1/fallback/user
                 - JwtAuthGatewayFilter
 
+            # Club Service Route
+            - id: club-service
+              uri: lb://CLUB-SERVICE
+              predicates:
+                - Path=/api/v1/clubs/**
+              filters:
+                - RewritePath=/api/v1/(?<segment>.*), /${segment}
+                - name: CircuitBreaker
+                  args:
+                    name: clubServiceCircuitBreaker
+                    fallbackUri: forward:/api/v1/fallback/club
+                - JwtAuthGatewayFilter
+
+            # Feed Service Route
+            - id: feed-service
+              uri: lb://FEED-SERVICE
+              predicates:
+                - Path=/api/v1/posts/**
+                - Path=/api/v1/comments/**
+              filters:
+                - RewritePath=/api/v1/(?<segment>.*), /${segment}
+                - name: CircuitBreaker
+                  args:
+                    name: feedServiceCircuitBreaker
+                    fallbackUri: forward:/api/v1/fallback/feed
+                - JwtAuthGatewayFilter
+
+            # Media Service Route
+            - id: media-service
+              uri: lb://MEDIA-SERVICE
+              predicates:
+                - Path=/api/v1/media/**
+              filters:
+                - RewritePath=/api/v1/(?<segment>.*), /${segment}
+                - name: CircuitBreaker
+                  args:
+                    name: mediaServiceCircuitBreaker
+                    fallbackUri: forward:/api/v1/fallback/media
+                - JwtAuthGatewayFilter
+
 
             # Dummy Service Route (for testing)
             - id: dummy-service

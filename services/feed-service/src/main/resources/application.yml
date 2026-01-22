@@ -1,0 +1,50 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: feed-service
+  data:
+    mongodb:
+      uri: mongodb://${MONGO_USER:tclubs}:${MONGO_PASSWORD:tclubs-pass}@${MONGO_HOST:localhost}:${MONGO_PORT:27017}/${MONGO_DB:tclubsdb}?retryWrites=true&w=majority
+      auto-index-creation: true
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: feed-service-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${server.port}}
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/}
+    register-with-eureka: true
+    fetch-registry: true
+
+application:
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    show-details: always
+
+logging:
+  level:
+    com.ashish.clubs: DEBUG
+    org.springframework.data.mongodb: DEBUG
+

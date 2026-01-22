@@ -1,0 +1,50 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: club-service
+  r2dbc:
+    url: r2dbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:tclubsdb}
+    username: ${DB_USER:tclubs}
+    password: ${DB_PASSWORD:tclubs-pass}
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${server.port}}
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/}
+    register-with-eureka: true
+    fetch-registry: true
+
+application:
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    show-details: always
+
+logging:
+  level:
+    com.ashish.clubs: DEBUG
+    org.springframework.r2dbc: DEBUG
+
